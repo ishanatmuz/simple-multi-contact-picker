@@ -16,12 +16,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_pick_contacts"
         android:text="Click to Select Contacts"
-        />
+        tools:ignore="HardcodedText" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Selected Contacts: "
         android:id="@+id/txt_selected_contacts"
-        />
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>

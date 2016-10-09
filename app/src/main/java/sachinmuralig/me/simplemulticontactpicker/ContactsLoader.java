@@ -1,6 +1,5 @@
 package sachinmuralig.me.simplemulticontactpicker;
 
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-
 public class ContactsLoader extends AsyncTask<String,Void,Void> {
 
     ContactsListAdapter contactsListAdapter;
@@ -20,7 +18,6 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
     private ArrayList<Contact> tempContactHolder;
     TextView txtProgress;
     int totalContactsCount,loadedContactsCount;
-
 
     ContactsLoader(Context context,ContactsListAdapter contactsListAdapter){
         this.context = context;
@@ -33,8 +30,6 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
 
     @Override
     protected Void doInBackground(String[] filters) {
-
-
         String filter = filters[0];
 
         ContentResolver contentResolver = context.getContentResolver();
@@ -66,71 +61,49 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
             );
 
         }
-        totalContactsCount = cursor.getCount();
-        if(cursor!=null && cursor.getCount()>0){
+        if (cursor != null) {
+            totalContactsCount = cursor.getCount();
+            if(totalContactsCount > 0){
+                while(cursor.moveToNext()) {
+                    if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
 
+                        String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                        String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                        Cursor phoneCursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?",
+                                new String[]{id},
+                                null
+                        );
 
+                        if (phoneCursor != null && phoneCursor.getCount() > 0) {
+                            while (phoneCursor.moveToNext()) {
+                                String phId = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
 
-            while(cursor.moveToNext()) {
-                if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                                String customLabel = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL));
 
-                    String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                    String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
-
-                    Cursor phoneCursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?",
-                            new String[]{id},
-                            null
-                    );
-
-                    if (phoneCursor != null && phoneCursor.getCount() > 0) {
-
-                        while (phoneCursor.moveToNext()) {
-                            String phId = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
-
-                            String customLabel = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL));
-
-                            String label = (String) ContactsContract.CommonDataKinds.Phone.getTypeLabel(context.getResources(),
-                                    phoneCursor.getInt(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)),
-                                    customLabel
-                            );
-
-                            String phNo = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-
-                            tempContactHolder.add(new Contact(phId, name, phNo, label));
-
-
-
+                                String label = (String) ContactsContract.CommonDataKinds.Phone.getTypeLabel(context.getResources(),
+                                        phoneCursor.getInt(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)),
+                                        customLabel
+                                );
+                                String phNo = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                tempContactHolder.add(new Contact(phId, name, phNo, label));
+                            }
+                            phoneCursor.close();
                         }
-                        phoneCursor.close();
-
                     }
-
+                    loadedContactsCount++;
+                    publishProgress();
                 }
-                loadedContactsCount++;
-
-                publishProgress();
-
-
+                cursor.close();
             }
-            cursor.close();
         }
-
         return null;
     }
 
     @Override
     protected void onProgressUpdate(Void[] v){
-
-
-
-
         if(this.tempContactHolder.size()>=100) {
-
-
             contactsListAdapter.addContacts(tempContactHolder);
 
             this.tempContactHolder.clear();
@@ -140,14 +113,11 @@ public class ContactsLoader extends AsyncTask<String,Void,Void> {
                 String progressMessage = "Loading...("+loadedContactsCount+"/"+totalContactsCount+")";
                 txtProgress.setText(progressMessage);
             }
-
         }
-
     }
 
     @Override
     protected void onPostExecute(Void v){
-
         contactsListAdapter.addContacts(tempContactHolder);
         tempContactHolder.clear();
 

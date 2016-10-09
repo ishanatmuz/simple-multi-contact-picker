@@ -31,65 +31,49 @@ public class ContactsPickerActivity extends AppCompatActivity {
         txtFilter = (EditText) findViewById(R.id.txt_filter);
         txtLoadInfo = (TextView) findViewById(R.id.txt_load_progress);
 
-
         contactsListAdapter = new ContactsListAdapter(this,new ContactsList());
-
         contactsChooser.setAdapter(contactsListAdapter);
 
-
         loadContacts("");
-
-
 
         txtFilter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 contactsListAdapter.filter(s.toString());
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
-
             }
         });
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(contactsListAdapter.selectedContactsList.contactArrayList.isEmpty()){
                     setResult(RESULT_CANCELED);
                 }
                 else{
-
                     Intent resultIntent = new Intent();
-
                     resultIntent.putParcelableArrayListExtra("SelectedContacts", contactsListAdapter.selectedContactsList.contactArrayList);
                     setResult(RESULT_OK,resultIntent);
-
                 }
                 finish();
-
             }
         });
     }
-
-
 
     private void loadContacts(String filter){
 
         if(contactsLoader!=null && contactsLoader.getStatus()!= AsyncTask.Status.FINISHED){
             try{
                 contactsLoader.cancel(true);
-            }catch (Exception e){
-
+            } catch (Exception e){
+                e.printStackTrace();
             }
         }
         if(filter==null) filter="";
@@ -103,8 +87,4 @@ public class ContactsPickerActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
-
-
 }

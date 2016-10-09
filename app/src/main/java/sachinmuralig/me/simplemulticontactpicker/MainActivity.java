@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,14 +21,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         contactsDisplay = (TextView) findViewById(R.id.txt_selected_contacts);
         pickContacts = (Button) findViewById(R.id.btn_pick_contacts);
 
         pickContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intentContactPick = new Intent(MainActivity.this,ContactsPickerActivity.class);
                 MainActivity.this.startActivityForResult(intentContactPick,CONTACT_PICK_REQUEST);
             }
@@ -37,22 +36,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-
         if(requestCode == CONTACT_PICK_REQUEST && resultCode == RESULT_OK){
-
             ArrayList<Contact> selectedContacts = data.getParcelableArrayListExtra("SelectedContacts");
-
-            String display="";
-            for(int i=0;i<selectedContacts.size();i++){
-
-                display += (i+1)+". "+selectedContacts.get(i).toString()+"\n";
-
+            String display = "";
+            for(int i = 0; i < selectedContacts.size(); i++) {
+                Contact contact = selectedContacts.get(i);
+                display += (i+1) + ". " + contact.toString() + "\n";
             }
-            contactsDisplay.setText("Selected Contacts : \n\n"+display);
-
+            contactsDisplay.setText(String.format(Locale.getDefault(), "Selected Contacts : \n\n%s",
+                    display));
         }
-
     }
-
-
 }

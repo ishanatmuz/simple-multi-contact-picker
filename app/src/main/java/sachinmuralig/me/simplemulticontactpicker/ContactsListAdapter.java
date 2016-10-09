@@ -2,8 +2,6 @@ package sachinmuralig.me.simplemulticontactpicker;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.DataSetObservable;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-
 import java.util.ArrayList;
-
 
 public class ContactsListAdapter extends BaseAdapter {
 
