@@ -32,13 +32,13 @@ public class MainActivity extends AppCompatActivity {
         pickContacts = (Button) findViewById(R.id.btn_pick_contacts);
 
         if (weHavePermissionToReadContacts()) {
-            enableContactsButton();
+            continueWithPermission();
         } else {
             requestReadContactsPermissionFirst();
         }
     }
 
-    private void enableContactsButton() {
+    private void continueWithPermission() {
         pickContacts.setEnabled(true);
         pickContacts.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void disableContactsButtonAndShowError() {
+    private void continueWithoutPermission() {
         pickContacts.setEnabled(false);
         contactsDisplay.setText(String.valueOf("Need permission to read contacts"));
     }
@@ -81,10 +81,10 @@ public class MainActivity extends AppCompatActivity {
                 && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-            enableContactsButton();
+            continueWithPermission();
         } else {
             Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
-            disableContactsButtonAndShowError();
+            continueWithoutPermission();
         }
     }
 
