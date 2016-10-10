@@ -12,7 +12,6 @@ import android.widget.CompoundButton;
 import java.util.ArrayList;
 
 public class ContactsListAdapter extends BaseAdapter {
-
     Context context;
     ContactsList contactsList,filteredContactsList,selectedContactsList;
     String filterContactName;
@@ -28,15 +27,11 @@ public class ContactsListAdapter extends BaseAdapter {
     }
 
     public void filter(String filterContactName){
-
-
-
         filteredContactsList.contactArrayList.clear();
 
         if(filterContactName.isEmpty() || filterContactName.length()<1){
             filteredContactsList.contactArrayList.addAll(contactsList.contactArrayList);
             this.filterContactName = "";
-
         }
         else {
             this.filterContactName = filterContactName.toLowerCase().trim();
@@ -47,13 +42,11 @@ public class ContactsListAdapter extends BaseAdapter {
             }
         }
         notifyDataSetChanged();
-
     }
 
     public void addContacts(ArrayList<Contact> contacts){
         this.contactsList.contactArrayList.addAll(contacts);
         this.filter(this.filterContactName);
-
     }
 
     @Override
@@ -73,7 +66,6 @@ public class ContactsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         ViewHolder viewHolder;
 
         if(convertView==null){
@@ -84,7 +76,6 @@ public class ContactsListAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.chkContact = (CheckBox) convertView.findViewById(R.id.chk_contact);
             convertView.setTag(viewHolder);
-
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
@@ -106,20 +97,15 @@ public class ContactsListAdapter extends BaseAdapter {
                 }
             }
         });
-
         return convertView;
     }
 
     public boolean alreadySelected(Contact contact)
     {
-        if(this.selectedContactsList.getContact(Integer.parseInt(contact.id))!=null)
-            return true;
-
-        return false;
+        return this.selectedContactsList.getContact(Integer.parseInt(contact.id)) != null;
     }
 
     public static class ViewHolder{
-
         CheckBox chkContact;
     }
 }

@@ -1,15 +1,13 @@
 package sachinmuralig.me.simplemulticontactpicker;
 
-
 import java.util.ArrayList;
-
 
 public class ContactsList{
 
     public ArrayList<Contact> contactArrayList;
 
     ContactsList(){
-        contactArrayList = new ArrayList<Contact>();
+        contactArrayList = new ArrayList<>();
     }
 
     public int getCount(){

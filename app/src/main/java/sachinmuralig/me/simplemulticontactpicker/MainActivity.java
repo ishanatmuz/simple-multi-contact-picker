@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intentContactPick = new Intent(MainActivity.this,ContactsPickerActivity.class);
+//                intentContactPick.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 MainActivity.this.startActivityForResult(intentContactPick,CONTACT_PICK_REQUEST);
             }
         });
